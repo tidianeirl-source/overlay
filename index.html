@@ -46,6 +46,11 @@
   /* masque kitsune */
   .kitsune{animation:flotte 5s ease-in-out infinite}
   @keyframes flotte{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-14px) rotate(2deg)}}
+  /* compteur */
+  .bump{animation:bump .7s cubic-bezier(.2,1.6,.4,1)}
+  @keyframes bump{0%{transform:scale(1)}35%{transform:scale(1.45)}100%{transform:scale(1)}}
+  .merci{animation:merci 3.2s ease-out forwards}
+  @keyframes merci{0%{opacity:0;transform:translateY(12px)}12%,75%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-10px)}}
   /* avatar */
   .avatar{animation:flotte 5s ease-in-out infinite}
   .sourcils{animation:sourcils 7s ease-in-out infinite}
@@ -276,6 +281,20 @@
       </g>
     </g>
 
+
+    <!-- ===== COMPTEUR D'ABONNÉS (entre les deux cadres) ===== -->
+    <g id="compteur" transform="translate(560 704)">
+      <g filter="url(#lueur)" class="halo"><rect width="380" height="56" rx="28" fill="none" stroke="#fff" stroke-width="3"/></g>
+      <rect width="380" height="56" rx="28" fill="#070707" stroke="var(--nacre)" stroke-width="3"/>
+      <use href="#etoile" class="etoile bo" x="16" y="18" width="20" height="20"/>
+      <text class="t-titre" x="44" y="35" font-size="17" fill="var(--nacre)" letter-spacing="4">ABONNÉS</text>
+      <g id="cptBloc" class="bo">
+        <text id="cptNombre" class="t-deco" x="246" y="41" font-size="32" fill="#fff" text-anchor="middle" filter="url(#lueur)">0</text>
+      </g>
+      <text id="cptGain" class="t-titre" x="362" y="35" font-size="17" fill="var(--gris)" text-anchor="end">+0</text>
+      <text id="cptMerci" class="t-titre" x="190" y="-14" font-size="22" fill="#fff" text-anchor="middle" letter-spacing="2" opacity="0" filter="url(#lueur)"></text>
+    </g>
+
     <!-- ===== PÉTALES QUI TOMBENT ===== -->
     <g id="petales"></g>
 
@@ -341,6 +360,68 @@
   pose('.cadre-cam', cadre(40,770,1000,562,12,22));
   pose('.cadre-jeu-ext', cadre(24,114,1032,594,14,30));
   pose('.cadre-cam-ext', cadre(24,754,1032,594,14,30));
+
+
+  // ===== COMPTEUR D'ABONNÉS =====
+  // ?abonnes=1234 : ton total actuel au début du live
+  // Les nouveaux abonnés arrivent en direct via TikFinity (appli de bureau, gratuite)
+  (function(){
+    const nombre = document.getElementById('cptNombre');
+    const bloc = document.getElementById('cptBloc');
+    const gainEl = document.getElementById('cptGain');
+    const merci = document.getElementById('cptMerci');
+    const base = parseInt(params.get('abonnes') || '0', 10) || 0;
+    const CLE = 'aki-gain-' + base;
+    let gain = 0, affiche = base, vus = new Set();
+    try { if (params.get('reset') === '1') localStorage.removeItem(CLE); gain = +(localStorage.getItem(CLE) || 0); } catch(e){}
+
+    const fmt = n => n.toLocaleString('fr-FR');
+    function rendu(){
+      const cible = base + gain;
+      const pas = () => {
+        if (affiche === cible) return;
+        affiche += Math.sign(cible - affiche) * Math.max(1, Math.round(Math.abs(cible - affiche) / 8));
+        nombre.textContent = fmt(affiche);
+        requestAnimationFrame(pas);
+      };
+      pas();
+      nombre.textContent = fmt(affiche);
+      gainEl.textContent = '+' + gain;
+    }
+    function nouvelAbonne(pseudo){
+      gain++;
+      try { localStorage.setItem(CLE, gain); } catch(e){}
+      rendu();
+      bloc.classList.remove('bump'); void bloc.getBBox(); bloc.classList.add('bump');
+      merci.textContent = '✦ MERCI ' + (pseudo ? '@' + pseudo : '') + ' ✦';
+      merci.classList.remove('merci'); void merci.getBBox(); merci.classList.add('merci');
+    }
+    rendu();
+
+    // connexion à TikFinity Desktop (doit tourner sur le même PC)
+    function connecte(){
+      let ws;
+      try { ws = new WebSocket('ws://127.0.0.1:21213/'); } catch(e){ return setTimeout(connecte, 5000); }
+      ws.onmessage = m => {
+        let ev; try { ev = JSON.parse(m.data); } catch(e){ return; }
+        if (!ev || ev.event !== 'follow') return;
+        const d = ev.data || {};
+        const id = d.uniqueId || d.userId || '';
+        if (id && vus.has(id)) return;
+        if (id) vus.add(id);
+        nouvelAbonne(d.uniqueId || d.nickname || '');
+      };
+      ws.onclose = () => setTimeout(connecte, 4000);
+      ws.onerror = () => { try{ ws.close(); }catch(e){} };
+    }
+    connecte();
+
+    // ?test=1 : simule des abonnés pour voir l'animation
+    if (params.get('test') === '1'){
+      const noms = ['kofi_gamer','ama.plays','ivoire_pro','yao225','mimi.ci'];
+      setInterval(() => nouvelAbonne(noms[Math.floor(Math.random()*noms.length)]), 4000);
+    }
+  })();
 
   // pétales de cerisier qui tombent en continu
   if (params.get('petales') === '0') return;
