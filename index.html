@@ -46,11 +46,6 @@
   /* masque kitsune */
   .kitsune{animation:flotte 5s ease-in-out infinite}
   @keyframes flotte{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-14px) rotate(2deg)}}
-  /* compteur */
-  .bump{animation:bump .7s cubic-bezier(.2,1.6,.4,1)}
-  @keyframes bump{0%{transform:scale(1)}35%{transform:scale(1.45)}100%{transform:scale(1)}}
-  .merci{animation:merci 3.2s ease-out forwards}
-  @keyframes merci{0%{opacity:0;transform:translateY(12px)}12%,75%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-10px)}}
   /* avatar */
   .avatar{animation:flotte 5s ease-in-out infinite}
   .sourcils{animation:sourcils 7s ease-in-out infinite}
@@ -70,6 +65,10 @@
   .nuage{animation:derive 5s ease-in-out infinite}
   @keyframes derive{0%,100%{transform:translate(0,0) rotate(-2deg) scale(1)}50%{transform:translate(-6px,-10px) rotate(2deg) scale(1.03)}}
 
+  .vague{stroke-dasharray:1 1;stroke-dashoffset:1;animation:vague 7s ease-in-out infinite}
+  @keyframes vague{0%{stroke-dashoffset:1}40%,65%{stroke-dashoffset:0}100%{stroke-dashoffset:-1}}
+  .spirale{animation:spirale 4s ease-in-out infinite}
+  @keyframes spirale{0%,100%{transform:rotate(-10deg)}50%{transform:rotate(10deg)}}
   .etoile{animation:scintille 2.4s ease-in-out infinite}
   @keyframes scintille{0%,100%{opacity:.4;transform:scale(.7) rotate(0)}50%{opacity:1;transform:scale(1.15) rotate(90deg)}}
 
@@ -83,8 +82,8 @@
 </head>
 <body>
 <div id="stage">
-  <div class="zone-apercu" style="left:40px;top:130px;width:1000px;height:562px">Ton jeu ici</div>
-  <div class="zone-apercu" style="left:40px;top:770px;width:1000px;height:562px">Ta caméra ici</div>
+  <div class="zone-apercu" style="left:40px;top:130px;width:1000px;height:562px">Ta caméra ici</div>
+  <div class="zone-apercu" style="left:40px;top:770px;width:1000px;height:562px">Ton jeu ici</div>
 
   <svg viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg">
     <defs>
@@ -155,30 +154,7 @@
         <path d="M0 -10 L2 -2 L10 0 L2 2 L0 10 L-2 2 L-10 0 L-2 -2Z" fill="#fff"/>
       </symbol>
 
-      <!-- nuage (sticker trame) -->
-      <path id="formeNuage" d="M34 152 C2 154 -2 106 34 98 C24 58 70 40 96 58 C108 16 166 8 186 48 C206 28 246 38 244 76 C274 80 278 126 252 136 C262 164 230 182 208 170 C192 188 150 188 136 172 C116 188 76 186 66 168 C52 176 30 170 34 152 Z"/>
-      <clipPath id="clipNuage"><use href="#formeNuage"/></clipPath>
-      <pattern id="trame" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-        <circle cx="3.5" cy="3.5" r="2.4" fill="#fff"/>
-      </pattern>
-      <pattern id="trameFine" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(20)">
-        <circle cx="2" cy="2" r=".9" fill="#fff"/>
-      </pattern>
-      <radialGradient id="lueurN">
-        <stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
-      </radialGradient>
-      <mask id="reliefs" maskUnits="userSpaceOnUse" x="-20" y="-20" width="320" height="230">
-        <rect x="-20" y="-20" width="320" height="230" fill="#000"/>
-        <ellipse cx="150" cy="62" rx="58" ry="44" fill="url(#lueurN)"><animate attributeName="cx" values="150;164;150" dur="7s" repeatCount="indefinite"/></ellipse>
-        <ellipse cx="210" cy="104" rx="44" ry="34" fill="url(#lueurN)"><animate attributeName="cy" values="104;94;104" dur="5s" repeatCount="indefinite"/></ellipse>
-        <ellipse cx="90" cy="96" rx="40" ry="30" fill="url(#lueurN)" opacity=".7"><animate attributeName="cx" values="90;78;90" dur="6s" repeatCount="indefinite"/></ellipse>
-      </mask>
-      <clipPath id="ecriture">
-        <rect x="845" y="40" height="180" width="0">
-          <animate attributeName="width" values="0;240;240;0" keyTimes="0;0.14;0.9;1" dur="9s" repeatCount="indefinite"
-            calcMode="spline" keySplines=".6 0 .3 1;0 0 1 1;.6 0 .4 1"/>
-        </rect>
-      </clipPath>
+
     </defs>
 
     <!-- ===== DÉCOR (percé par les zones jeu / caméra) ===== -->
@@ -209,8 +185,8 @@
 
     <g filter="url(#lueur)">
       <use href="#etoile" class="etoile bo" x="64"  y="88" width="22" height="22"/>
-      <text class="t-titre" x="100" y="108" font-size="30" fill="var(--nacre)" letter-spacing="5">EN JEU</text>
-      <use href="#etoile" class="etoile bo" x="246" y="88" width="22" height="22" style="animation-delay:-1.2s"/>
+      <text class="t-titre" x="100" y="108" font-size="30" fill="var(--nacre)" letter-spacing="5">CAMÉRA</text>
+      <use href="#etoile" class="etoile bo" x="276" y="88" width="22" height="22" style="animation-delay:-1.2s"/>
     </g>
 
     <!-- ===== CADRE CAMÉRA ===== -->
@@ -221,8 +197,8 @@
 
     <g filter="url(#lueur)">
       <use href="#etoile" class="etoile bo" x="64"  y="728" width="22" height="22" style="animation-delay:-.6s"/>
-      <text class="t-titre" x="100" y="748" font-size="30" fill="var(--nacre)" letter-spacing="5">CAMÉRA</text>
-      <use href="#etoile" class="etoile bo" x="276" y="728" width="22" height="22" style="animation-delay:-1.8s"/>
+      <text class="t-titre" x="100" y="748" font-size="30" fill="var(--nacre)" letter-spacing="5">EN JEU</text>
+      <use href="#etoile" class="etoile bo" x="246" y="728" width="22" height="22" style="animation-delay:-1.8s"/>
     </g>
 
     <!-- ===== BOUQUETS DE FLEURS ===== -->
@@ -237,7 +213,7 @@
       <!-- autour du nuage -->
       <use href="#fleur" class="fleur bo" x="790" y="190" width="60" height="60" style="--d:5.2s;--r:-1.5s"/>
       <!-- autour du masque -->
-      <use href="#fleur" class="fleur bo" x="640" y="1470" width="120" height="120" style="--d:5s;--r:-2.5s"/>
+      <use href="#fleur" class="fleur bo" x="545" y="1520" width="110" height="110" style="--d:5s;--r:-2.5s"/>
       <use href="#fleur" class="fleur bo" x="985" y="1570" width="100" height="100" style="--d:6s;--r:-1s"/>
       <use href="#fleur" class="fleur bo" x="720" y="1380" width="54" height="54" style="--d:4.4s;--r:-3.5s"/>
     </g>
@@ -282,41 +258,45 @@
     </g>
 
 
-    <!-- ===== COMPTEUR D'ABONNÉS (entre les deux cadres) ===== -->
-    <g id="compteur" transform="translate(560 704)">
-      <g filter="url(#lueur)" class="halo"><rect width="380" height="56" rx="28" fill="none" stroke="#fff" stroke-width="3"/></g>
-      <rect width="380" height="56" rx="28" fill="#070707" stroke="var(--nacre)" stroke-width="3"/>
-      <use href="#etoile" class="etoile bo" x="16" y="18" width="20" height="20"/>
-      <text class="t-titre" x="44" y="35" font-size="17" fill="var(--nacre)" letter-spacing="4">ABONNÉS</text>
-      <g id="cptBloc" class="bo">
-        <text id="cptNombre" class="t-deco" x="246" y="41" font-size="32" fill="#fff" text-anchor="middle" filter="url(#lueur)">0</text>
-      </g>
-      <text id="cptGain" class="t-titre" x="362" y="35" font-size="17" fill="var(--gris)" text-anchor="end">+0</text>
-      <text id="cptMerci" class="t-titre" x="190" y="-14" font-size="22" fill="#fff" text-anchor="middle" letter-spacing="2" opacity="0" filter="url(#lueur)"></text>
-    </g>
-
-    <!-- ===== PÉTALES QUI TOMBENT ===== -->
-    <g id="petales"></g>
 
     <!-- ===== NUAGE + PSEUDO ===== -->
-    <g transform="translate(-32 1368)">
-    <g class="nuage bo">
-      <g transform="translate(812 32)">
-        <use href="#formeNuage" transform="translate(0 0) scale(1)" fill="#fff" filter="url(#flou)" opacity=".35"/>
-        <use href="#formeNuage" fill="#fff" stroke="#fff" stroke-width="22" stroke-linejoin="round"/>
-        <use href="#formeNuage" fill="#151515"/>
-        <g clip-path="url(#clipNuage)">
-          <rect x="-10" y="-10" width="300" height="210" fill="url(#trameFine)" opacity=".18"/>
-          <rect x="-10" y="-10" width="300" height="210" fill="url(#trame)" mask="url(#reliefs)"/>
+    <!-- ===== NUAGE JAPONAIS + PSEUDO ===== -->
+    <g transform="translate(640 1376) scale(1.25)">
+      <defs>
+        <clipPath id="ecriture">
+          <rect x="70" y="70" height="80" width="0">
+            <animate attributeName="width" values="0;200;200;0" keyTimes="0;0.14;0.9;1" dur="9s" repeatCount="indefinite"
+              calcMode="spline" keySplines=".6 0 .3 1;0 0 1 1;.6 0 .4 1"/>
+          </rect>
+        </clipPath>
+      </defs>
+      <ellipse class="aura bo" cx="170" cy="100" rx="210" ry="120" fill="url(#gAura)" opacity=".6"/>
+      <g class="nuage bo">
+        <!-- traînées de brume sous le nuage -->
+        <g fill="none" stroke="var(--nacre)" stroke-linecap="round" filter="url(#lueur)">
+          <path class="vague" pathLength="1" stroke-width="4" d="M-10 158 C 50 150 110 166 180 158 S 290 150 345 160"/>
+          <path class="vague" pathLength="1" stroke-width="3" style="animation-delay:-2.5s" d="M50 176 C 100 170 150 182 210 175 S 280 170 310 176"/>
         </g>
+        <!-- corps du nuage -->
+        <g filter="url(#lueur)">
+          <path id="corpsNuage" d="M20 130 C 18 110 40 98 60 106 C 58 76 88 58 114 72 C 122 40 160 26 188 44 C 206 24 246 30 254 58 C 282 56 304 80 292 104 C 314 108 320 134 300 142 L 42 142 C 28 142 20 138 20 130 Z"
+            fill="#070707" stroke="var(--nacre)" stroke-width="5" stroke-linejoin="round"/>
+        </g>
+        <use href="#corpsNuage" class="eclat" pathLength="1" fill="none" stroke-width="5" style="animation-duration:6s"/>
+        <!-- spirales -->
+        <g fill="none" stroke="var(--nacre)" stroke-width="3.5" stroke-linecap="round" filter="url(#lueur)">
+          <path class="spirale bo" d="M52.0 110.0 L54.3 110.5 L56.3 111.5 L58.1 112.9 L59.4 114.6 L60.3 116.6 L60.6 118.6 L60.5 120.7 L59.9 122.6 L58.9 124.2 L57.6 125.6 L56.0 126.5 L54.3 127.1 L52.6 127.2 L50.9 126.9 L49.4 126.3 L48.1 125.3 L47.1 124.1 L46.5 122.8 L46.2 121.4 L46.2 120.0 L46.6 118.7 L47.3 117.6 L48.1 116.7 L49.1 116.0 L50.2 115.7 L51.3 115.6 L52.3 115.8 L53.3 116.1 L54.0 116.7 L54.6 117.4 L54.9 118.2 L55.0 119.0 L55.0 119.8 L54.7 120.4 L54.4 121.0 L53.9 121.4 L53.4 121.6 L52.9 121.7 L52.4 121.7 L52.0 121.5"/>
+          <path class="spirale bo" style="animation-delay:-1s" d="M170.0 81.0 L174.4 80.0 L178.3 78.0 L181.4 75.1 L183.6 71.5 L184.8 67.5 L184.8 63.5 L183.8 59.7 L181.9 56.4 L179.3 53.8 L176.1 52.1 L172.6 51.2 L169.2 51.4 L166.0 52.4 L163.3 54.1 L161.2 56.5 L159.8 59.2 L159.3 62.1 L159.5 65.0 L160.5 67.6 L162.1 69.7 L164.1 71.3 L166.4 72.3 L168.8 72.6 L171.0 72.3 L173.0 71.4 L174.7 70.0 L175.8 68.4 L176.4 66.5 L176.5 64.7 L176.1 63.0 L175.3 61.6 L174.2 60.5 L172.9 59.8 L171.6 59.6 L170.3 59.7 L169.3 60.1 L168.4 60.7 L167.8 61.5 L167.6 62.4 L167.6 63.2"/>
+          <path class="spirale bo" style="animation-delay:-2s" d="M236.0 56.0 L239.4 56.7 L242.5 58.3 L245.0 60.4 L246.8 63.1 L247.9 66.1 L248.2 69.2 L247.7 72.2 L246.5 74.9 L244.7 77.2 L242.5 78.9 L239.9 80.0 L237.3 80.3 L234.7 80.1 L232.4 79.1 L230.4 77.7 L228.9 75.9 L227.9 73.8 L227.5 71.6 L227.7 69.5 L228.3 67.5 L229.5 65.8 L230.9 64.6 L232.6 63.7 L234.3 63.4 L236.0 63.4 L237.6 63.9 L238.9 64.8 L239.9 65.9 L240.5 67.1 L240.8 68.4 L240.8 69.7 L240.4 70.8 L239.8 71.8 L239.0 72.5 L238.1 72.9 L237.2 73.1 L236.4 73.0 L235.7 72.7 L235.1 72.2 L234.8 71.7"/>
+          <path class="spirale bo" style="animation-delay:-3s" d="M284.0 122.0 L286.3 121.5 L288.3 120.5 L290.1 119.1 L291.4 117.4 L292.3 115.4 L292.6 113.4 L292.5 111.3 L291.9 109.4 L290.9 107.8 L289.6 106.4 L288.0 105.5 L286.3 104.9 L284.6 104.8 L282.9 105.1 L281.4 105.7 L280.1 106.7 L279.1 107.9 L278.5 109.2 L278.2 110.6 L278.2 112.0 L278.6 113.3 L279.3 114.4 L280.1 115.3 L281.1 116.0 L282.2 116.3 L283.3 116.4 L284.3 116.2 L285.3 115.9 L286.0 115.3 L286.6 114.6 L286.9 113.8 L287.0 113.0 L287.0 112.2 L286.7 111.6 L286.4 111.0 L285.9 110.6 L285.4 110.4 L284.9 110.3 L284.4 110.3 L284.0 110.5"/>
+        </g>
+        <!-- pseudo -->
+        <g clip-path="url(#ecriture)" filter="url(#lueur)">
+          <text id="pseudo" class="t-deco" x="170" y="130" font-size="46" text-anchor="middle" fill="#fff" letter-spacing="4">AKI</text>
+        </g>
+        <use href="#etoile" class="etoile bo" x="300" y="34" width="22" height="22"/>
+        <use href="#etoile" class="etoile bo" x="0" y="72" width="16" height="16" style="animation-delay:-1.2s"/>
       </g>
-      <g clip-path="url(#ecriture)" filter="url(#lueur)">
-        <text id="pseudo" class="t-deco" x="950" y="166" font-size="64" text-anchor="middle"
-          fill="#fff" stroke="#151515" stroke-width="8" paint-order="stroke" letter-spacing="3">AKI</text>
-      </g>
-      <use href="#etoile" class="etoile bo" x="1030" y="40" width="26" height="26"/>
-      <use href="#etoile" class="etoile bo" x="820"  y="210" width="18" height="18" style="animation-delay:-1s"/>
-    </g>
     </g>
   </svg>
 </div>
@@ -361,98 +341,6 @@
   pose('.cadre-jeu-ext', cadre(24,114,1032,594,14,30));
   pose('.cadre-cam-ext', cadre(24,754,1032,594,14,30));
 
-
-  // ===== COMPTEUR D'ABONNÉS =====
-  // ?abonnes=1234 : ton total actuel au début du live
-  // Les nouveaux abonnés arrivent en direct via TikFinity (appli de bureau, gratuite)
-  (function(){
-    const nombre = document.getElementById('cptNombre');
-    const bloc = document.getElementById('cptBloc');
-    const gainEl = document.getElementById('cptGain');
-    const merci = document.getElementById('cptMerci');
-    const base = parseInt(params.get('abonnes') || '0', 10) || 0;
-    const CLE = 'aki-gain-' + base;
-    let gain = 0, affiche = base, vus = new Set();
-    try { if (params.get('reset') === '1') localStorage.removeItem(CLE); gain = +(localStorage.getItem(CLE) || 0); } catch(e){}
-
-    const fmt = n => n.toLocaleString('fr-FR');
-    function rendu(){
-      const cible = base + gain;
-      const pas = () => {
-        if (affiche === cible) return;
-        affiche += Math.sign(cible - affiche) * Math.max(1, Math.round(Math.abs(cible - affiche) / 8));
-        nombre.textContent = fmt(affiche);
-        requestAnimationFrame(pas);
-      };
-      pas();
-      nombre.textContent = fmt(affiche);
-      gainEl.textContent = '+' + gain;
-    }
-    function nouvelAbonne(pseudo){
-      gain++;
-      try { localStorage.setItem(CLE, gain); } catch(e){}
-      rendu();
-      bloc.classList.remove('bump'); void bloc.getBBox(); bloc.classList.add('bump');
-      merci.textContent = '✦ MERCI ' + (pseudo ? '@' + pseudo : '') + ' ✦';
-      merci.classList.remove('merci'); void merci.getBBox(); merci.classList.add('merci');
-    }
-    rendu();
-
-    // connexion à TikFinity Desktop (doit tourner sur le même PC)
-    function connecte(){
-      let ws;
-      try { ws = new WebSocket('ws://127.0.0.1:21213/'); } catch(e){ return setTimeout(connecte, 5000); }
-      ws.onmessage = m => {
-        let ev; try { ev = JSON.parse(m.data); } catch(e){ return; }
-        if (!ev || ev.event !== 'follow') return;
-        const d = ev.data || {};
-        const id = d.uniqueId || d.userId || '';
-        if (id && vus.has(id)) return;
-        if (id) vus.add(id);
-        nouvelAbonne(d.uniqueId || d.nickname || '');
-      };
-      ws.onclose = () => setTimeout(connecte, 4000);
-      ws.onerror = () => { try{ ws.close(); }catch(e){} };
-    }
-    connecte();
-
-    // ?test=1 : simule des abonnés pour voir l'animation
-    if (params.get('test') === '1'){
-      const noms = ['kofi_gamer','ama.plays','ivoire_pro','yao225','mimi.ci'];
-      setInterval(() => nouvelAbonne(noms[Math.floor(Math.random()*noms.length)]), 4000);
-    }
-  })();
-
-  // pétales de cerisier qui tombent en continu
-  if (params.get('petales') === '0') return;
-  const NS = 'http://www.w3.org/2000/svg';
-  const zone = document.getElementById('petales');
-  const NB = +(params.get('petales') || 26);
-  const petales = [];
-  for (let i=0;i<NB;i++){
-    const u = document.createElementNS(NS,'use');
-    u.setAttribute('href','#petale'); u.setAttribute('width','24'); u.setAttribute('height','28');
-    u.setAttribute('x','-12'); u.setAttribute('y','-14');
-    zone.appendChild(u);
-    petales.push({el:u, x:Math.random()*1080, y:Math.random()*1920, v:40+Math.random()*60,
-      a:20+Math.random()*50, f:.4+Math.random()*.8, ph:Math.random()*6.28,
-      r:Math.random()*360, vr:(Math.random()-.5)*120, s:.6+Math.random()*1.1,
-      o:.35+Math.random()*.55, flip:1+Math.random()*2});
-  }
-  let prec = performance.now();
-  function anime(t){
-    const dt = Math.min((t-prec)/1000, .1); prec = t;
-    for (const p of petales){
-      p.y += p.v*dt; p.r += p.vr*dt;
-      if (p.y > 1960){ p.y = -40; p.x = Math.random()*1080; }
-      const x = p.x + Math.sin(t/1000*p.f + p.ph)*p.a;
-      const sx = Math.cos(t/1000*p.flip + p.ph);
-      p.el.setAttribute('transform', `translate(${x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${p.r.toFixed(1)}) scale(${(p.s*sx).toFixed(2)} ${p.s.toFixed(2)})`);
-      p.el.setAttribute('opacity', p.o);
-    }
-    requestAnimationFrame(anime);
-  }
-  requestAnimationFrame(anime);
 })();
 </script>
 </body>
